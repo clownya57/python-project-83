@@ -1,6 +1,7 @@
 import os
 
 import psycopg
+import requests
 from dotenv import load_dotenv
 from flask import (
     Flask,
@@ -101,10 +102,29 @@ def urls_checks_create(url_id):
         abort(404)
 
     try:
-        db.create_url_check(url_id)
-        flash("Страница успешно проверена", "success")
-    except psycopg.Error:
-        flash("Произошла ошибка при проверке", "danger")
+        response = requests.get(
+            url["name"],
+            timeout=10,
+        )
+        response.raise_for_status()
+
+        db.create_url_check(
+            url_id,
+            response.status_code,
+        )
+    except (
+        requests.exceptions.RequestException,
+        psycopg.Error,
+    ):
+        flash(
+            "Произошла ошибка при проверке",
+            "danger",
+        )
+    else:
+        flash(
+            "Страница успешно проверена",
+            "success",
+        )
 
     return redirect(
         url_for(

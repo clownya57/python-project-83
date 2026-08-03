@@ -44,7 +44,11 @@
                 {% endif %}
               </td>
 
-              <td></td>
+              <td>
+ 		{% if url.last_status_code is not none %}
+   		  {{ url.last_status_code }}
+ 		{% endif %}
+              </td>
             </tr>
           {% endfor %}
         </tbody>

@@ -19,23 +19,24 @@ def get_connection():
 
 def get_urls():
     query = """
-        SELECT
+        SELECT DISTINCT ON (urls.id)
             urls.id,
             urls.name,
             urls.created_at,
-            MAX(url_checks.created_at) AS last_check_at
+            url_checks.created_at AS last_check_at,
+            url_checks.status_code AS last_status_code
         FROM urls
         LEFT JOIN url_checks
             ON url_checks.url_id = urls.id
-        GROUP BY
-            urls.id,
-            urls.name,
-            urls.created_at
-        ORDER BY urls.id DESC
+        ORDER BY
+            urls.id DESC,
+            url_checks.created_at DESC,
+            url_checks.id DESC
     """
 
     with get_connection() as connection:
         return connection.execute(query).fetchall()
+
 
 def get_url(url_id):
     query = """
@@ -97,10 +98,13 @@ def get_url_checks(url_id):
             (url_id,),
         ).fetchall()
 
-def create_url_check(url_id):
+def create_url_check(url_id, status_code):
     query = """
-        INSERT INTO url_checks (url_id)
-        VALUES (%s)
+        INSERT INTO url_checks (
+            url_id,
+            status_code
+        )
+        VALUES (%s, %s)
         RETURNING
             id,
             url_id,
@@ -114,5 +118,8 @@ def create_url_check(url_id):
     with get_connection() as connection:
         return connection.execute(
             query,
-            (url_id,),
+            (
+                url_id,
+                status_code,
+            ),
         ).fetchone()
