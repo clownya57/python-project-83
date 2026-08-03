@@ -2,7 +2,22 @@
 
 set -Eeuo pipefail
 
-curl -LsSf https://astral.sh/uv/install.sh | sh
+installer="$(mktemp)"
+trap 'rm -f "$installer"' EXIT
+
+curl \
+  --proto '=https' \
+  --proto-redir '=https' \
+  --tlsv1.2 \
+  --location \
+  --fail \
+  --silent \
+  --show-error \
+  --output "$installer" \
+  https://astral.sh/uv/install.sh
+
+sh "$installer"
+
 source "$HOME/.local/bin/env"
 
 make install
