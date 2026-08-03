@@ -29,13 +29,21 @@
 
               <td>
                 <a
-                  href="{{ url_for('urls_show', url_id=url.id) }}"
+                  href="{{ url_for(
+                    'urls_show',
+                    url_id=url.id
+                  ) }}"
                 >
                   {{ url.name }}
                 </a>
               </td>
 
-              <td></td>
+              <td>
+                {% if url.last_check_at %}
+                  {{ url.last_check_at.strftime("%Y-%m-%d") }}
+                {% endif %}
+              </td>
+
               <td></td>
             </tr>
           {% endfor %}

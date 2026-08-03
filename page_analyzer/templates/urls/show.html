@@ -38,15 +38,26 @@
       Проверки
     </h2>
 
-    <button
-      type="button"
-      class="btn btn-primary mb-2"
+    <form
+      method="post"
+      action="{{ url_for(
+        'urls_checks_create',
+        url_id=url.id
+      ) }}"
+      class="mb-2"
     >
-      Запустить проверку
-    </button>
+      <input
+        type="submit"
+        value="Запустить проверку"
+        class="btn btn-primary"
+      >
+    </form>
 
     <div class="table-responsive">
-      <table class="table table-bordered">
+      <table
+        class="table table-bordered"
+        data-test="checks"
+      >
         <thead>
           <tr>
             <th scope="col">ID</th>
@@ -57,6 +68,28 @@
             <th scope="col">Дата создания</th>
           </tr>
         </thead>
+
+        <tbody>
+          {% for check in checks %}
+            <tr>
+              <td>{{ check.id }}</td>
+
+              <td>
+                {% if check.status_code is not none %}
+                  {{ check.status_code }}
+                {% endif %}
+              </td>
+
+              <td>{{ check.h1 or "" }}</td>
+              <td>{{ check.title or "" }}</td>
+              <td>{{ check.description or "" }}</td>
+
+              <td>
+                {{ check.created_at.strftime("%Y-%m-%d") }}
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
       </table>
     </div>
   </div>

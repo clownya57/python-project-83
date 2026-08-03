@@ -1,5 +1,6 @@
 import os
 
+import psycopg
 from dotenv import load_dotenv
 from flask import (
     Flask,
@@ -84,7 +85,30 @@ def urls_show(url_id):
     if url is None:
         abort(404)
 
+    checks = db.get_url_checks(url_id)
+
     return render_template(
         "urls/show.html",
         url=url,
+        checks=checks,
+    )
+
+@app.post("/urls/<int:url_id>/checks")
+def urls_checks_create(url_id):
+    url = db.get_url(url_id)
+
+    if url is None:
+        abort(404)
+
+    try:
+        db.create_url_check(url_id)
+        flash("Страница успешно проверена", "success")
+    except psycopg.Error:
+        flash("Произошла ошибка при проверке", "danger")
+
+    return redirect(
+        url_for(
+            "urls_show",
+            url_id=url_id,
+        )
     )
