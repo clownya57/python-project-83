@@ -8,8 +8,13 @@ CREATE TABLE IF NOT EXISTS url_checks (
     id SERIAL PRIMARY KEY,
     url_id INTEGER NOT NULL REFERENCES urls(id) ON DELETE CASCADE,
     status_code INTEGER,
-    h1 VARCHAR(255),
-    title VARCHAR(255),
-    description VARCHAR(255),
+    h1 TEXT,
+    title TEXT,
+    description TEXT,
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
+
+ALTER TABLE url_checks
+    ALTER COLUMN h1 TYPE TEXT,
+    ALTER COLUMN title TYPE TEXT,
+    ALTER COLUMN description TYPE TEXT;

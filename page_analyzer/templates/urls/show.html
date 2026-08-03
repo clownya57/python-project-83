@@ -80,9 +80,17 @@
                 {% endif %}
               </td>
 
-              <td>{{ check.h1 or "" }}</td>
-              <td>{{ check.title or "" }}</td>
-              <td>{{ check.description or "" }}</td>
+              <td>
+                {{ check.h1|truncate_text }}
+              </td>
+
+              <td>
+                {{ check.title|truncate_text }}
+              </td>
+
+              <td>
+                {{ check.description|truncate_text }}
+              </td>
 
               <td>
                 {{ check.created_at.strftime("%Y-%m-%d") }}

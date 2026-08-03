@@ -14,6 +14,7 @@ from flask import (
 )
 
 from page_analyzer import db
+from page_analyzer.seo import parse_page
 from page_analyzer.url_utils import is_valid_url, normalize_url
 
 load_dotenv()
@@ -23,6 +24,16 @@ app.config["SECRET_KEY"] = os.getenv(
     "SECRET_KEY",
     "development-secret-key",
 )
+
+@app.template_filter()
+def truncate_text(value):
+    if value is None:
+        return ""
+
+    if len(value) <= 200:
+        return value
+
+    return f"{value[:200]}..."
 
 @app.get("/")
 def index():
@@ -42,10 +53,16 @@ def urls_index():
 
 @app.post("/urls")
 def urls_create():
-    entered_url = request.form.get("url", "").strip()
+    entered_url = request.form.get(
+        "url",
+        "",
+    ).strip()
 
     if not is_valid_url(entered_url):
-        flash("Некорректный URL", "danger")
+        flash(
+            "Некорректный URL",
+            "danger",
+        )
 
         return (
             render_template(
@@ -59,7 +76,10 @@ def urls_create():
     existing_url = db.get_url_by_name(normalized_url)
 
     if existing_url:
-        flash("Страница уже существует", "info")
+        flash(
+            "Страница уже существует",
+            "info",
+        )
 
         return redirect(
             url_for(
@@ -70,7 +90,10 @@ def urls_create():
 
     new_url = db.create_url(normalized_url)
 
-    flash("Страница успешно добавлена", "success")
+    flash(
+        "Страница успешно добавлена",
+        "success",
+    )
 
     return redirect(
         url_for(
@@ -108,9 +131,14 @@ def urls_checks_create(url_id):
         )
         response.raise_for_status()
 
+        page_data = parse_page(response.content)
+
         db.create_url_check(
-            url_id,
-            response.status_code,
+            url_id=url_id,
+            status_code=response.status_code,
+            h1=page_data["h1"],
+            title=page_data["title"],
+            description=page_data["description"],
         )
     except (
         requests.exceptions.RequestException,

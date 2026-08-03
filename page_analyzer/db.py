@@ -10,7 +10,9 @@ def get_connection():
     database_url = os.getenv("DATABASE_URL")
 
     if not database_url:
-        raise RuntimeError("Переменная DATABASE_URL не установлена")
+        raise RuntimeError(
+            "Переменная DATABASE_URL не установлена"
+        )
 
     return psycopg.connect(
         database_url,
@@ -36,7 +38,6 @@ def get_urls():
 
     with get_connection() as connection:
         return connection.execute(query).fetchall()
-
 
 def get_url(url_id):
     query = """
@@ -98,13 +99,22 @@ def get_url_checks(url_id):
             (url_id,),
         ).fetchall()
 
-def create_url_check(url_id, status_code):
+def create_url_check(
+    url_id,
+    status_code,
+    h1,
+    title,
+    description,
+):
     query = """
         INSERT INTO url_checks (
             url_id,
-            status_code
+            status_code,
+            h1,
+            title,
+            description
         )
-        VALUES (%s, %s)
+        VALUES (%s, %s, %s, %s, %s)
         RETURNING
             id,
             url_id,
@@ -115,11 +125,16 @@ def create_url_check(url_id, status_code):
             created_at
     """
 
+    values = (
+        url_id,
+        status_code,
+        h1,
+        title,
+        description,
+    )
+
     with get_connection() as connection:
         return connection.execute(
             query,
-            (
-                url_id,
-                status_code,
-            ),
+            values,
         ).fetchone()
