@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+
+{% block title %}Анализатор страниц{% endblock %}
+
+{% block content %}
+  <div class="container-lg mt-3">
+    <div class="row">
+      <div class="col-12 col-lg-8 mx-auto">
+        <div class="bg-light border rounded-3 p-4 p-md-5">
+          <h1 class="display-3">
+            Анализатор страниц
+          </h1>
+
+          <p class="lead">
+            Бесплатно проверяйте сайты на SEO-пригодность
+          </p>
+
+          <form action="/urls" method="post">
+            <div class="row g-3">
+              <div class="col-12 col-md">
+                <input
+                  type="text"
+                  name="url"
+                  class="form-control form-control-lg"
+                  placeholder="https://www.example.com"
+                  aria-label="Адрес сайта"
+                  required
+                >
+              </div>
+
+              <div class="col-12 col-md-auto">
+                <button
+                  type="submit"
+                  class="btn btn-primary btn-lg px-5 w-100"
+                >
+                  Проверить
+                </button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}
