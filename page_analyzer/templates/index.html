@@ -15,12 +15,16 @@
             Бесплатно проверяйте сайты на SEO-пригодность
           </p>
 
-          <form action="/urls" method="post">
+          <form
+            action="{{ url_for('urls_create') }}"
+            method="post"
+          >
             <div class="row g-3">
               <div class="col-12 col-md">
                 <input
                   type="text"
                   name="url"
+                  value="{{ url }}"
                   class="form-control form-control-lg"
                   placeholder="https://www.example.com"
                   aria-label="Адрес сайта"

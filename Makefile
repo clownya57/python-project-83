@@ -17,3 +17,6 @@ build:
 
 render-start:
 	gunicorn -w 5 -b 0.0.0.0:$(PORT) page_analyzer:app
+
+db-prepare:
+	set -a && . ./.env && set +a && psql -v ON_ERROR_STOP=1 -d "$$DATABASE_URL" -f database.sql
