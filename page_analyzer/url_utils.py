@@ -5,6 +5,7 @@ import validators
 MAX_URL_LENGTH = 255
 ALLOWED_SCHEMES = {"http", "https"}
 
+
 def is_valid_url(value):
     if not value:
         return False
@@ -21,6 +22,7 @@ def is_valid_url(value):
         return False
 
     return bool(validators.url(value))
+
 
 def normalize_url(value):
     parsed_url = urlparse(value)

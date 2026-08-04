@@ -25,6 +25,7 @@ app.config["SECRET_KEY"] = os.getenv(
     "development-secret-key",
 )
 
+
 @app.template_filter()
 def truncate_text(value):
     if value is None:
@@ -35,12 +36,14 @@ def truncate_text(value):
 
     return f"{value[:200]}..."
 
+
 @app.get("/")
 def index():
     return render_template(
         "index.html",
         url="",
     )
+
 
 @app.get("/urls")
 def urls_index():
@@ -50,6 +53,7 @@ def urls_index():
         "urls/index.html",
         urls=urls,
     )
+
 
 @app.post("/urls")
 def urls_create():
@@ -102,6 +106,7 @@ def urls_create():
         )
     )
 
+
 @app.get("/urls/<int:url_id>")
 def urls_show(url_id):
     url = db.get_url(url_id)
@@ -116,6 +121,7 @@ def urls_show(url_id):
         url=url,
         checks=checks,
     )
+
 
 @app.post("/urls/<int:url_id>/checks")
 def urls_checks_create(url_id):

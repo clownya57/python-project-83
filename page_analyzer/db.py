@@ -6,6 +6,7 @@ from psycopg.rows import dict_row
 
 load_dotenv()
 
+
 def get_connection():
     database_url = os.getenv("DATABASE_URL")
 
@@ -18,6 +19,7 @@ def get_connection():
         database_url,
         row_factory=dict_row,
     )
+
 
 def get_urls():
     query = """
@@ -39,6 +41,7 @@ def get_urls():
     with get_connection() as connection:
         return connection.execute(query).fetchall()
 
+
 def get_url(url_id):
     query = """
         SELECT id, name, created_at
@@ -51,6 +54,7 @@ def get_url(url_id):
             query,
             (url_id,),
         ).fetchone()
+
 
 def get_url_by_name(name):
     query = """
@@ -65,6 +69,7 @@ def get_url_by_name(name):
             (name,),
         ).fetchone()
 
+
 def create_url(name):
     query = """
         INSERT INTO urls (name)
@@ -77,6 +82,7 @@ def create_url(name):
             query,
             (name,),
         ).fetchone()
+
 
 def get_url_checks(url_id):
     query = """
@@ -98,6 +104,7 @@ def get_url_checks(url_id):
             query,
             (url_id,),
         ).fetchall()
+
 
 def create_url_check(
     url_id,

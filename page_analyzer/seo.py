@@ -7,6 +7,7 @@ def get_tag_text(tag):
 
     return tag.get_text(" ", strip=True)
 
+
 def get_description(soup):
     tag = soup.find(
         "meta",
@@ -22,6 +23,7 @@ def get_description(soup):
         return None
 
     return content.strip()
+
 
 def parse_page(html):
     soup = BeautifulSoup(
